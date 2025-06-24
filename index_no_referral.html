@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Income Platform</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #00b09b, #96c93d);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      color: #fff;
+      padding: 30px;
+    }
+    .box {
+      background: rgba(0,0,0,0.5);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 2em;
+    }
+    .balance {
+      font-size: 2em;
+      background: #fff;
+      color: #000;
+      margin: 20px 0;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+    .info {
+      margin: 10px 0;
+    }
+    button {
+      background: #ffcc00;
+      border: none;
+      color: #000;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    .notice {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    form {
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    form input {
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    form button {
+      background: #00ff99;
+    }
+    #profile, #editProfileForm, #successPage {
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    #profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    #profile, #editProfileForm, #successPage {
+      display: none;
+    }
+    .history {
+      margin-top: 30px;
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      border-radius: 10px;
+      color: #fff;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .history p {
+      margin: 5px 0;
+    }
+    #referralLinkBox {
+      margin: 15px 0;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      color: #000;
+      word-break: break-all;
+      user-select: all;
+      cursor: pointer;
+    }
+    #myWork {
+      display: none;
+      background: rgba(0,0,0,0.3);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>💸 দৈনিক ইনকাম প্ল্যাটফর্ম</h1>
+    <form id="signupForm">
+      <h3>আপনার নাম ও Gmail দিয়ে Signup করুন</h3>
+      <input type="text" id="username" placeholder="আপনার নাম" required /><br />
+      <input type="email" id="usergmail" placeholder="আপনার Gmail" required /><br />
+      <input type="file" id="profilePicInput" accept="image/*" /><br />
+      <button type="button" onclick="submitSignup()">Signup করুন</button>
+    </form>
+    <div id="profile">
+      <h3>আপনার প্রোফাইল</h3>
+      <img id="profilePic" src="" alt="Profile Picture" />
+      <p id="displayName"></p>
+      <p id="displayEmail"></p>
+      <button onclick="showEditProfile()">প্রোফাইল এডিট করুন</button>
+    </div>
+    <form id="editProfileForm">
+      <h3>প্রোফাইল এডিট করুন</h3>
+      <input type="text" id="editName" placeholder="আপনার নাম" required /><br />
+      <input type="email" id="editEmail" placeholder="আপনার Gmail" required /><br />
+      <input type="file" id="editProfilePicInput" accept="image/*" /><br />
+      <button type="button" onclick="submitEditProfile()">সেভ করুন</button>
+      <button type="button" onclick="cancelEdit()">বাতিল করুন</button>
+    </form>
+    <p class="info">আপনার ব্যালেন্স:</p>
+    <div class="balance" id="balance">৳0</div>
+    <button onclick="watchAd()">🎬 Ad দেখুন (৳2)</button>
+    <button onclick="toggleMyWork()">📌 My Work</button>
+    <div class="notice">
+      👉 ৫০০০ টাকা এবং কমপক্ষে <b>৩০ জন</b> রেফার করলে Withdraw করতে পারবেন।
+    </div>
+    <div id="myWork">
+      <h3>📌 My Work</h3>
+      <p>✅ Ad দেখলে ২ টাকা করে পাবেন।</p>
+      <p>✅ প্রতি রেফারে ৫০ টাকা করে পাবেন।</p>
+      <p>✅ ৩০ রেফার + ৫০০০ টাকা হলে Withdraw করতে পারবেন।</p>
+      <p>👉 রেফার লিংক বন্ধুদের দিন আর টাকা কামান।</p>
+    </div>
+    <form id="withdrawForm" style="display: none;">
+      <h3>Withdraw করুন</h3>
+      <input type="text" id="paymentNumber" placeholder="Nagad বা Bkash নাম্বার" required /><br />
+      <button type="button" onclick="submitWithdraw()">রিকোয়েস্ট দিন</button>
+    </form>
+    <div id="successPage">
+      <h3>🎉 পেমেন্ট সফল!</h3>
+      <p>আপনার রিকোয়েস্ট গ্রহণ করা হয়েছে। ২৪ ঘন্টার মধ্যে টাকা পাবেন।</p>
+      <button onclick="resetApp()">মূল পেজে ফিরে যান</button>
+    </div>
+    <div class="history">
+      <h3>🗂️ Payment History</h3>
+      <p>Rahim - Nagad - ৳5000 ✅</p>
+      <p>Karim - Bkash - ৳6500 ✅</p>
+      <p>Selina - Nagad - ৳7000 ✅</p>
+      <p>Jamal - Bkash - ৳8000 ✅</p>
+      <p>Kabir - Nagad - ৳4500 ✅</p>
+      <p>Sumi - Bkash - ৳5200 ✅</p>
+      <p>Rupa - Nagad - ৳5600 ✅</p>
+      <p>Hasan - Bkash - ৳6100 ✅</p>
+      <p>Monir - Nagad - ৳4700 ✅</p>
+      <p>Rima - Bkash - ৳7500 ✅</p>
+    </div>
+  </div>
+  <script type="text/javascript">
+    let balance = 0;
+    let refCount = 0;
+    let userName = "";
+    let userEmail = "";
+    let userPicSrc = "";
+    const adsterraLink = "https://amuletshaped.com/xmy5jz0v?key=4bff42bbba1a2dd0e034d406ae638704";
+    function submitSignup() {
+      let name = document.getElementById("username").value.trim();
+      let email = document.getElementById("usergmail").value.trim();
+      let picInput = document.getElementById("profilePicInput");
+      if (name === "" || email === "") { alert("নাম ও Gmail দিন!"); return; }
+      userName = name;
+      userEmail = email;
+      if (picInput.files && picInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          userPicSrc = e.target.result;
+          showProfile();
+        };
+        reader.readAsDataURL(picInput.files[0]);
+      } else {
+        userPicSrc = "https://via.placeholder.com/80";
+        showProfile();
+      }
+      document.getElementById("signupForm").style.display = "none";
+    }
+    function showProfile() {
+      document.getElementById("profile").style.display = "block";
+      document.getElementById("profilePic").src = userPicSrc;
+      document.getElementById("displayName").innerText = "নাম: " + userName;
+      document.getElementById("displayEmail").innerText = "Gmail: " + userEmail;
+      let referralLink = window.location.href.split("?")[0] + "?ref=" + encodeURIComponent(userName);
+      document.getElementById("referralLinkBox").innerText = referralLink;
+    }
+    function showEditProfile() {
+      document.getElementById("editProfileForm").style.display = "block";
+      document.getElementById("profile").style.display = "none";
+      document.getElementById("editName").value = userName;
+      document.getElementById("editEmail").value = userEmail;
+    }
+    function submitEditProfile() {
+      let newName = document.getElementById("editName").value.trim();
+      let newEmail = document.getElementById("editEmail").value.trim();
+      let picInput = document.getElementById("editProfilePicInput");
+      if (newName === "" || newEmail === "") { alert("নাম ও Gmail দিন!"); return; }
+      userName = newName;
+      userEmail = newEmail;
+      if (picInput.files && picInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+          userPicSrc = e.target.result;
+          updateProfileAfterEdit();
+        };
+        reader.readAsDataURL(picInput.files[0]);
+      } else {
+        updateProfileAfterEdit();
+      }
+    }
+    function updateProfileAfterEdit() {
+      document.getElementById("editProfileForm").style.display = "none";
+      showProfile();
+    }
+    function cancelEdit() {
+      document.getElementById("editProfileForm").style.display = "none";
+      document.getElementById("profile").style.display = "block";
+    }
+    function watchAd() {
+      if (userName === "") { alert("Signup করতে হবে প্রথমে!"); return; }
+      window.open(adsterraLink, "_blank");
+      balance += 2;
+      alert("Ad দেখেছেন! 2 টাকা যোগ হয়েছে।");
+      document.getElementById("balance").innerText = "৳" + balance;
+      checkWithdraw();
+    }
+    function toggleMyWork() {
+      let work = document.getElementById("myWork");
+      work.style.display = work.style.display === "none" ? "block" : "none";
+    }
+    function checkWithdraw() {
+      if (balance >= 5000) {
+        document.getElementById("withdrawForm").style.display = "block";
+      }
+    }
+    function submitWithdraw() {
+      let number = document.getElementById("paymentNumber").value.trim();
+      if (number.length < 10) {
+        alert("সঠিক নাম্বার দিন!");
+        return;
+      }
+      document.getElementById("withdrawForm").style.display = "none";
+      document.getElementById("successPage").style.display = "block";
+    }
+    function resetApp() {
+      balance = 0;
+      refCount = 0;
+      userName = "";
+      userEmail = "";
+      userPicSrc = "";
+      document.getElementById("balance").innerText = "৳0";
+      document.getElementById("referralLinkBox").innerText = "";
+      document.getElementById("successPage").style.display = "none";
+      document.getElementById("profile").style.display = "none";
+      document.getElementById("withdrawForm").style.display = "none";
+      document.getElementById("editProfileForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+    }
+    function copyReferralLink() {
+      let referralLinkText = document.getElementById("referralLinkBox").innerText;
+      navigator.clipboard
+        .writeText(referralLinkText)
+        .then(() => { alert("Referral link কপি হয়েছে!"); })
+        .catch(() => { alert("কপি করতে ব্যর্থ! ম্যানুয়ালি কপি করুন।"); });
+    }
+  </script>
+</body>
+</html>
